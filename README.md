@@ -10,6 +10,7 @@ A machine learning project that leverages Natural Language Processing (NLP) tech
 - [Installation](#installation)
 - [Usage](#usage)
 - [Methodology](#methodology)
+- [Data Analysis](#data-analysis)
 - [Built With](#built-with)
 - [Contributing](#contributing)
 - [License](#license)
@@ -44,6 +45,8 @@ Spambase/
 ├── data_import_xinrui.py    # Data preprocessing and analysis scripts
 ├── yang_main.py             # Main execution script for email classification
 ├── test.py                  # Test script for model evaluation
+├── assets/                  # Project assets
+│   └── images/              # Visualization images
 ├── spambase/                # Dataset directory
 │   ├── spambase.data        # Spam dataset
 │   ├── spambase.DOCUMENTATION
@@ -137,6 +140,28 @@ python test.py
 5. **Evaluation**:
    - Model performance is assessed using accuracy, precision, and recall metrics
    - Results are printed to the console
+
+## Data Analysis
+
+The following visualizations demonstrate the word frequency analysis for spam vs ham emails. These charts help illustrate how certain keywords are more prevalent in spam messages compared to legitimate emails.
+
+### Word Frequency Tables
+
+The tables below show the occurrence counts of key words ("win", "free", "money", "today") in both spam and ham email categories:
+
+![Word Frequency Table 1](assets/images/word-frequency-table-1.png)
+
+![Word Frequency Table 2](assets/images/word-frequency-table-2.png)
+
+### Word Frequency Charts
+
+The stacked bar charts visualize the distribution of these keywords across spam and ham categories:
+
+![Word Frequency Chart 1](assets/images/word-frequency-chart-1.png)
+
+![Word Frequency Chart 2](assets/images/word-frequency-chart-2.png)
+
+These visualizations demonstrate that words like "win", "free", and "money" appear more frequently in spam emails, which helps the Naive Bayes classifier distinguish between spam and legitimate messages.
 
 ## Built With
 
