@@ -19,9 +19,7 @@ A machine learning project that leverages Natural Language Processing (NLP) tech
 
 ## Overview
 
-The rise of digital communication has brought with it a significant increase in unwanted emails, commonly known as spam. These irrelevant or inappropriate messages clutter inboxes and may contain harmful links or scams. This project tackles this issue by building a machine learning model that can automatically classify emails as spam or legitimate (ham) based on their content.
-
-The project implements a Naive Bayes classifier using the Multinomial Naive Bayes algorithm, which is particularly well-suited for text classification tasks. The model is trained on a dataset of labeled emails and evaluated using standard classification metrics.
+This project implements a spam email detection system using Natural Language Processing (NLP) and machine learning. By leveraging the Multinomial Naive Bayes algorithm, the model automatically classifies emails as spam or legitimate (ham) based on their content, helping users maintain clean and secure inboxes.
 
 ## Features
 
@@ -124,45 +122,45 @@ python test.py
 
 ## Methodology
 
-1. **Data Collection**: The project uses the Spambase dataset and a custom test database containing labeled ham and spam emails.
+The project follows a standard machine learning pipeline:
 
-2. **Dataset Splitting**: The dataset is divided into training (75%) and testing (25%) subsets. The testing subset serves as an independent dataset that wasn't seen during training, allowing us to assess how well the model generalizes to new, unseen data.
+1. **Data Collection**: Uses the Spambase dataset and a custom test database with labeled ham and spam emails.
 
-3. **Feature Extraction**: Text data is converted into numerical features using word frequencies. The `CountVectorizer()` from scikit-learn tokenizes the input text and counts word occurrences, creating a matrix where each row represents a document and each column represents a unique term.
+2. **Dataset Splitting**: Divides data into training (75%) and testing (25%) subsets for model evaluation.
+
+3. **Feature Extraction**: Converts text to numerical features using word frequencies via `CountVectorizer()`, creating a matrix where rows represent documents and columns represent unique terms.
 
 ![Feature Extraction](assets/images/feature-extraction.png)
 
-4. **Model Training**: 
-   - Multinomial Naive Bayes classifier is trained on the vectorized text data
-   - The model learns the probability distributions of words in spam vs ham emails
+4. **Model Training**: Trains a Multinomial Naive Bayes classifier on vectorized text data to learn probability distributions of words in spam vs ham emails.
 
 ![Training Code](assets/images/training-code.png)
 
-### How Naive Bayes Classification Works
+### How Naive Bayes Works
 
-The Naive Bayes algorithm uses Bayes' theorem to calculate the probability that an email is spam or ham given the words it contains. The model compares `P(spam|words)` and `P(ham|words)` to make its classification decision.
+Naive Bayes uses Bayes' theorem to calculate `P(spam|words)` and `P(ham|words)`, then classifies based on the higher probability.
 
 ![Bayes Comparison](assets/images/bayes-comparison.png)
 
-**Training Process:**
+**Training Steps:**
 
-1. **Prior Probabilities**: The model first calculates the prior probabilities of spam and ham emails in the training dataset.
+1. **Prior Probabilities**: Calculate `P(spam)` and `P(ham)` from training data distribution.
 
 ![Prior Probabilities](assets/images/training-prior-probabilities.png)
 
-2. **Word Probabilities**: For each word in the vocabulary, the model learns the conditional probabilities `P(word|spam)` and `P(word|ham)` by counting word frequencies in spam and ham emails.
+2. **Word Probabilities**: Learn conditional probabilities `P(word|spam)` and `P(word|ham)` by counting word frequencies.
 
 ![Word Probabilities](assets/images/training-word-probabilities.png)
 
-3. **Classification**: When classifying a new email, the model multiplies the word probabilities and compares `P(spam|words)` vs `P(ham|words)`. The class with the higher probability is chosen.
+3. **Classification**: For new emails, multiply word probabilities and compare `P(spam|words)` vs `P(ham|words)`.
 
 ![Probability Comparison](assets/images/training-probability-comparison.png)
 
-5. **Evaluation**: Model performance is assessed using accuracy, precision, and recall metrics.
+5. **Evaluation**: Assess performance using accuracy, precision, and recall metrics.
 
 ## Model Evaluation
 
-The Naive Bayes classifier was evaluated on a test dataset of 1,035 emails (286 spam, 749 ham). The model achieved **97% precision** and **95% recall**, demonstrating strong performance in distinguishing between spam and legitimate emails.
+Evaluated on 1,035 test emails (286 spam, 749 ham), the model achieved **97% precision** and **95% recall**.
 
 ### Classification Process
 
@@ -172,9 +170,7 @@ The Naive Bayes classifier was evaluated on a test dataset of 1,035 emails (286 
 
 ![Confusion Matrix](assets/images/confusion-matrix.png)
 
-**Results:**
-- **True Spam:** 273 | **True Ham:** 740
-- **False Spam:** 9 | **False Ham:** 13
+**Results:** True Spam: 273 | True Ham: 740 | False Spam: 9 | False Ham: 13
 
 ### Performance Metrics
 
@@ -182,17 +178,11 @@ The Naive Bayes classifier was evaluated on a test dataset of 1,035 emails (286 
 
 ## Data Analysis
 
-The following visualizations demonstrate the word frequency analysis for spam vs ham emails. These charts help illustrate how certain keywords are more prevalent in spam messages compared to legitimate emails.
-
-### Word Frequency Analysis
-
-The table and chart below show the occurrence counts of key words ("win", "free", "money", "today") in both spam and ham email categories:
+Word frequency analysis reveals that keywords like "win", "free", and "money" appear more frequently in spam emails, enabling the classifier to distinguish between spam and legitimate messages.
 
 ![Word Frequency Table](assets/images/word-frequency-table-1.png)
 
 ![Word Frequency Chart](assets/images/word-frequency-chart-1.png)
-
-These visualizations demonstrate that words like "win", "free", and "money" appear more frequently in spam emails, which helps the Naive Bayes classifier distinguish between spam and legitimate messages.
 
 ## Built With
 
@@ -204,16 +194,15 @@ These visualizations demonstrate that words like "win", "free", and "money" appe
 
 ## Contributing
 
-This project is part of coursework for CS5002 at Northeastern University. Contributions and suggestions are welcome! 
+This project is part of coursework for CS5002 at Northeastern University. Contributions are welcome!
 
-To contribute:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-For bug reports or enhancement suggestions, please open an issue with appropriate tags.
+For bug reports or suggestions, please open an issue.
 
 ## License
 
