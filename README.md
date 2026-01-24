@@ -14,7 +14,6 @@ A machine learning project that leverages Natural Language Processing (NLP) tech
 - [Contributing](#contributing)
 - [License](#license)
 - [Authors](#authors)
-- [Contact](#contact)
 
 ## Overview
 
@@ -166,12 +165,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Authors
 
-- **Xinrui Yi** - Initial work - [GitHub](https://github.com/YillonMask/)
-
-## Contact
-
-For questions or discussions about this project, please contact:
-- Email: yixinrui24@gmail.com
+- **Kaustubha** - [GitHub](https://github.com/Kaustubha-09/)
 
 ---
 
