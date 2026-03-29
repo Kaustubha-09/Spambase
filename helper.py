@@ -1,9 +1,9 @@
-from configuration import *
+import os
+from nltk.tokenize import word_tokenize  # run nltk.download('punkt') once
 
 
 def split_email(email):
     tokens = word_tokenize(email)
-
     return tokens
 
 
