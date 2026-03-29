@@ -13,6 +13,7 @@ A machine learning project that leverages Natural Language Processing (NLP) tech
 - [Model Evaluation](#model-evaluation)
 - [Data Analysis](#data-analysis)
 - [Built With](#built-with)
+- [Testing](#testing)
 - [Contributing](#contributing)
 - [License](#license)
 - [Authors](#authors)
@@ -25,12 +26,17 @@ This project implements a spam email detection system using Natural Language Pro
 
 - **Text Preprocessing**: Tokenization and normalization of email content
 - **Feature Extraction**: Bag of Words (BoW) representation using CountVectorizer
-- **Machine Learning Model**: Multinomial Naive Bayes classifier for spam detection
+- **Multi-Model Comparison**: Benchmarks Bernoulli Naive Bayes, Logistic Regression, and SVM side by side
+- **Manual Naive Bayes**: Hand-rolled Bayesian classifier with log-space arithmetic and Laplace smoothing
 - **Model Evaluation**: Comprehensive performance metrics including:
   - Accuracy
   - Precision
   - Recall
   - F1 Score
+  - AUC-ROC
+  - 5-fold Cross-Validation
+- **Visualizations**: Confusion matrices, ROC curves, top spam/ham word charts, and model comparison bar chart — saved to `plots/`
+- **CLI**: Classify any raw email string directly from the command line
 - **Flexible Data Handling**: Support for multiple file encodings (UTF-8, ISO-8859-1, Latin-1)
 - **Easy Integration**: Modular code structure for easy extension and customization
 
@@ -38,12 +44,20 @@ This project implements a spam email detection system using Natural Language Pro
 
 ```
 Spambase/
+├── main.py                  # Entry point: model comparison, visualizations, CLI
 ├── beyes.py                 # Naive Bayes training and classification functions
-├── configuration.py         # Configuration and imports
+├── configuration.py         # Configuration, constants, and imports
 ├── helper.py                # Utility functions for file operations and text processing
-├── data_import_xinrui.py    # Data preprocessing and analysis scripts
-├── yang_main.py             # Main execution script for email classification
-├── test.py                  # Test script for model evaluation
+├── data_import.py           # Manual Naive Bayes implementation (fixed)
+├── visualizations.py        # Plot generation (confusion matrices, ROC, word charts)
+├── requirements.txt         # Python dependencies
+├── tests/                   # Unit tests
+│   └── test_spam_filter.py
+├── plots/                   # Auto-generated visualizations
+│   ├── confusion_matrices.png
+│   ├── roc_curves.png
+│   ├── model_comparison.png
+│   └── top_spam_ham_words.png
 ├── assets/                  # Project assets
 │   └── images/              # Visualization images
 ├── spambase/                # Dataset directory
@@ -72,7 +86,7 @@ cd Spambase
 
 2. Install required dependencies:
 ```bash
-pip install scikit-learn nltk pandas numpy
+pip install -r requirements.txt
 ```
 
 3. (Optional) Download NLTK data if needed:
@@ -83,9 +97,35 @@ nltk.download('punkt')
 
 ## Usage
 
-### Basic Usage
+### Run All Models
 
-Train and evaluate the spam detection model:
+Train and compare all models, print results, and save visualizations to `plots/`:
+
+```bash
+python main.py
+```
+
+### Classify a Single Email (CLI)
+
+```bash
+python main.py --email "Congratulations! You've won a FREE prize. Claim now!"
+```
+
+Output:
+```
+Result:           SPAM
+Spam probability: 100.0%
+```
+
+### Skip Plot Generation
+
+```bash
+python main.py --no-plots
+```
+
+### Basic Usage (Programmatic)
+
+Train and evaluate the spam detection model on raw email text:
 
 ```python
 from beyes import spam_filter_train
@@ -112,12 +152,6 @@ for file_path in spam_files_path:
 
 # Train the model
 clf, vectorizer = spam_filter_train(X, Y)
-```
-
-### Running the Test Script
-
-```bash
-python test.py
 ```
 
 ## Methodology
@@ -176,6 +210,21 @@ Evaluated on 1,035 test emails (286 spam, 749 ham), the model achieved **97% pre
 
 ![Precision and Recall Metrics](assets/images/precision-recall-metrics.png)
 
+### Multi-Model Comparison (Spambase Dataset — 4,601 emails)
+
+| Model | Accuracy | Precision | Recall | F1 | AUC-ROC | CV Accuracy |
+|---|---|---|---|---|---|---|
+| Manual Naive Bayes | 0.8243 | 0.6950 | 0.9890 | 0.8163 | — | — |
+| Bernoulli NB | 0.8762 | 0.8716 | 0.8044 | 0.8367 | 0.9496 | 0.8868 ± 0.0081 |
+| Logistic Regression | 0.9294 | 0.9209 | 0.8981 | 0.9093 | 0.9702 | 0.9246 ± 0.0068 |
+| SVM | 0.9251 | 0.9224 | 0.8843 | 0.9030 | 0.9688 | 0.9213 ± 0.0062 |
+
+![Model Comparison](plots/model_comparison.png)
+
+![ROC Curves](plots/roc_curves.png)
+
+![Confusion Matrices](plots/confusion_matrices.png)
+
 ## Data Analysis
 
 Word frequency analysis reveals that keywords like "win", "free", and "money" appear more frequently in spam emails, enabling the classifier to distinguish between spam and legitimate messages.
@@ -184,6 +233,8 @@ Word frequency analysis reveals that keywords like "win", "free", and "money" ap
 
 ![Word Frequency Chart](assets/images/word-frequency-chart-1.png)
 
+![Top Spam/Ham Words](plots/top_spam_ham_words.png)
+
 ## Built With
 
 - **Python** - The core programming language
@@ -191,6 +242,20 @@ Word frequency analysis reveals that keywords like "win", "free", and "money" ap
 - **NLTK** - Natural Language Processing library for text preprocessing
 - **Pandas** - Data manipulation and analysis
 - **NumPy** - Numerical computing
+- **Matplotlib** - Visualization and plot generation
+- **Seaborn** - Statistical data visualization
+
+## Testing
+
+Unit tests cover feature extraction correctness and the manual Naive Bayes implementation.
+
+```bash
+pytest tests/
+```
+
+```
+16 passed in 1.55s
+```
 
 ## Contributing
 
