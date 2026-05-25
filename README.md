@@ -337,7 +337,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Kaustubha Eluri** 
   - [GitHub](https://github.com/Kaustubha-09/)
-  - [Portfolio](https://kaustubha-09.github.io)
+  - [Portfolio](https://kaustubha.vercel.app/)
   - [LinkedIn](https://linkedin.com/in/kaustubha-ve)
   - Email: kaustubha.ev@gmail.com
 
