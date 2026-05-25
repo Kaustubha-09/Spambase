@@ -257,6 +257,66 @@ pytest tests/
 16 passed in 1.55s
 ```
 
+## Tradeoffs
+
+- **Two datasets, two model paths.** Spambase (engineered features) for the comparison study, raw .txt corpus for the end-to-end NB pipeline. Each demonstrates a different thing. See [docs/decisions.md, ADR-001](docs/decisions.md#adr-001--two-datasets-two-model-paths).
+- **Hand-rolled Naive Bayes alongside scikit-learn.** `data_import.py` implements NB by hand — the algorithm is the lesson. Hidden behind `clf.fit(X, y)` it disappears. See [ADR-002](docs/decisions.md#adr-002--hand-rolled-naive-bayes-alongside-scikit-learn).
+- **Log-space arithmetic** in the hand-rolled NB so multiplying ~10,000 token probabilities doesn't underflow. See [ADR-003](docs/decisions.md#adr-003--log-space-probability-arithmetic).
+- **Laplace `α=1` smoothing** so an unseen word doesn't force the posterior to zero. See [ADR-004](docs/decisions.md#adr-004--laplace-add-one-smoothing).
+- **Multi-model comparison, not a single winner.** Each model makes a different precision/recall tradeoff. The right model depends on what kind of error is worse. See [ADR-006](docs/decisions.md#adr-006--multi-model-comparison-rather-than-one-winning-model).
+- **Plots saved to disk, never `plt.show()`.** Headless-safe for CI; PNGs are referenceable from the README.
+
+Full ADR set in [docs/decisions.md](docs/decisions.md). Limitations in [docs/limitations.md](docs/limitations.md).
+
+---
+
+## Quality Gates
+
+- `pytest tests/` — 16 unit tests covering vectorization output, manual NB log-prob arithmetic, file loading with encoding fallback.
+- `python -m py_compile` on every source file — `main.py`, `beyes.py`, `configuration.py`, `data_import.py`, `helper.py`, `visualizations.py`.
+- `python main.py` runs the full multi-model pipeline + saves all 4 plots to `plots/`.
+- `python main.py --email "..."` returns a classification + spam probability in under a second.
+- Train/test split is fixed (`test_size=0.25`, `random_state=42`) for reproducibility.
+- Tests do **not** assert specific accuracy numbers — sklearn version drift would make those flaky.
+
+---
+
+## Project Stats
+
+- **7** Python source files (`main.py`, `beyes.py`, `configuration.py`, `data_import.py`, `helper.py`, `visualizations.py`, `test.py`)
+- **16** pytest unit tests
+- **4** models compared (Manual NB · Bernoulli NB · Logistic Regression · SVM)
+- **4** auto-generated plots (`confusion_matrices`, `roc_curves`, `model_comparison`, `top_spam_ham_words`)
+- **4,601** rows in the Spambase feature dataset
+- **1,035** emails in the raw .txt corpus (286 spam, 749 ham)
+- **57** engineered Spambase features
+
+---
+
+## Resume Bullets
+
+- Implemented a **four-model spam classification study** comparing hand-rolled Naive Bayes, scikit-learn Bernoulli NB, Logistic Regression, and SVM on the Spambase dataset (4,601 rows × 57 features) — **Logistic Regression won on AUC-ROC (0.97) and 5-fold CV accuracy (0.92 ± 0.007)**.
+- Wrote a **hand-rolled Naive Bayes classifier** with log-space probability arithmetic (numerical stability) and Laplace smoothing (unseen-word handling) — pedagogical complement to the scikit-learn implementations.
+- Built an **auto-generated visualization suite** — confusion matrix per model, ROC-curve overlay, top-20 spam/ham word charts, accuracy comparison bar — saved to `plots/` for headless / CI workflows.
+- Shipped a **CLI** (`python main.py --email "..."`) that re-uses the trained Multinomial NB for sub-second classification of arbitrary email strings.
+- Wrote **16 pytest unit tests** covering vectorization output, manual NB log-prob arithmetic, and the multi-encoding (UTF-8 / Latin-1 / ISO-8859-1) file loader.
+
+---
+
+## Interview Talking Points
+
+**Why hand-roll Naive Bayes when sklearn has `MultinomialNB`?** Because the algorithm is the lesson. Hiding NB behind `clf.fit(X, y)` skips Bayes' theorem, log-space arithmetic, and Laplace smoothing — the three things you need to *implement* NB, not just use it. The library version is faster and gets used in `main.py` for the comparison. The hand-rolled version exists in `data_import.py` to demonstrate the math.
+
+**Log-space arithmetic and why it matters.** Spam classification multiplies ~10,000 token probabilities per email. Most are near zero. Multiplying 10,000 near-zero numbers underflows to `0.0` in any float type. Summing their logs is numerically stable. This is one of the most important practical lessons in implementing NB by hand — every production NB implementation does this.
+
+**Laplace smoothing as the unseen-event defense.** Without smoothing, a word that never appeared in (say) the ham training set gets `P(word | ham) = 0`. Multiply that into the posterior and the entire ham probability collapses to zero — even if 50 other words in the email screamed ham. `α = 1.0` Laplace smoothing assigns a small non-zero probability to unseen events. This is the difference between a working classifier and a brittle one.
+
+**Why compare four models instead of picking a winner.** The lesson is the tradeoff. Manual NB has the highest recall (catches 99% of spam) at 70% precision (lots of false positives). LR has the highest AUC-ROC and balanced precision/recall. SVM is competitive but slower. The right model depends on whether sending a legit email to spam (false positive) is worse than letting spam through (false negative). A real spam filter would weight the loss function asymmetrically — a roadmap item.
+
+**The honest scope.** Spambase is a 1999 dataset. Modern spam looks very different (image spam, polymorphic content, header-aware evasion). This project demonstrates the classical ML pipeline — vectorization, training, evaluation, visualization — at a depth that's pedagogically useful. It is not a production spam filter and the README documents the gap explicitly.
+
+---
+
 ## Contributing
 
 This project is part of coursework for CS5002 at Northeastern University. Contributions are welcome!
