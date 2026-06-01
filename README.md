@@ -257,6 +257,16 @@ pytest tests/
 16 passed in 1.55s
 ```
 
+---
+
+## Class presentation
+
+<p align="center">
+  <img src="Screenshots/01_presentation_title_slide.png" width="640" alt="SPAMbase — An Approach to Efficient Email Classification (Northeastern Khoury College class presentation, title slide)" />
+</p>
+
+Full deck is committed at [`docs/presentation.pptx`](docs/presentation.pptx). The figures referenced throughout the README (`assets/images/training-*.png`, `assets/images/bayes-comparison.png`, etc.) are pulled from this deck.
+
 ## Tradeoffs
 
 - **Two datasets, two model paths.** Spambase (engineered features) for the comparison study, raw .txt corpus for the end-to-end NB pipeline. Each demonstrates a different thing. See [docs/decisions.md, ADR-001](docs/decisions.md#adr-001--two-datasets-two-model-paths).
